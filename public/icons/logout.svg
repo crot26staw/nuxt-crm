@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" role="img"
+    aria-labelledby="logoutOutlineTitle" fill="none" stroke="white" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <title id="logoutOutlineTitle">Выход из личного кабинета</title>
+    <rect x="3" y="4" width="12" height="16" rx="2" ry="2"></rect>
+    <path d="M21 12h-8"></path>
+    <path d="M18 9l3 3-3 3"></path>
+</svg>
