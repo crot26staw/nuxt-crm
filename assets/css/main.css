@@ -1,3 +1,9 @@
 .btn{
     cursor: pointer;
 }
+
+.title{
+    font-size: 44px;
+    font-weight: 600;
+    color: var(--primary);
+}

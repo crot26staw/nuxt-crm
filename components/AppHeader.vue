@@ -11,7 +11,7 @@ const logOut = async () => {
     <div class="AppHeader">
         <div class="AppHeader__head">
             <NuxtLink to="/">
-                <NuxtImg src="icons/logo.svg" width="150px" />
+                <NuxtImg src="icons/logo.svg" width="120px" />
             </NuxtLink>
             <div class="AppHeader__logout" @click="logOut">
                 <p>Выход</p>
@@ -28,21 +28,13 @@ const logOut = async () => {
                         Главная
                     </NuxtLink>
                 </li>
-                <li class="AppHeader__li">
-                    <NuxtLink class="AppHeader__link" to="/">
-                        <div class="AppHeader__icon">
-                            <NuxtImg src="icons/home.svg" width="24px" />
-                        </div>
-                        Главная
-                    </NuxtLink>
-                </li>
             </ul>
         </nav>
     </div>
 </template>
 <style lang="scss">
 .AppHeader {
-    width: 340px;
+    width: 300px;
     padding: 60px 20px;
     height: 100vh;
     position: relative;
