@@ -1,7 +1,3 @@
-export interface TaskHead {
-    id: string,
-    name: string
-}
 
 export interface TaskItem {
     id: number,
@@ -9,4 +5,10 @@ export interface TaskItem {
     company: string,
     price: number,
     status: string
+}
+
+export interface Task {
+    id: string,
+    name: string,
+    items: TaskItem[]
 }

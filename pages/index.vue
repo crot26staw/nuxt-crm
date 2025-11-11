@@ -1,33 +1,17 @@
 <script lang="ts" setup>
-import type { TaskHead } from '~/shared/types/TaskItem';
-const taskItems = [
-    {
-        id: "inbox",
-        name: "Входящие",
-    },
-    {
-        id: "by-agreement",
-        name: "На согласовании",
-    },
-    {
-        id: "in-production",
-        name: "В производстве",
-    },
-    {
-        id: "produced",
-        name: "Произведено",
-    },
-    {
-        id: "for-shipment",
-        name: "К отгрузке",
-    },
-] as TaskHead[];
+import { useTaskStore } from '~/store/tasks';
+import type { Task } from '~/shared/types/TaskItem';
+
+const taskStore = useTaskStore();
+taskStore.getTaskItems();
+
+const taskItems = ref<Task[]>(taskStore.tasks);
 
 const taskStatusForModal = ref({
     id: "inbox",
     name: "Входящие",
 });
-const changeStatusForModal = (object: TaskHead) =>{
+const changeStatusForModal = (object: Task) => {
     taskStatusForModal.value = object;
 }
 
@@ -41,9 +25,10 @@ const changeModalActive = () => {
     <div class="AppHome">
         <h1 class="title">Планировка задач</h1>
         <div class="AppHome__wrapper">
-            <AppTaskItem v-for="item in taskItems" :key="item.id" :taskHead="item" @change-modal="changeModalActive" @change-status="changeStatusForModal"/>
+            <AppTaskItem v-for="item in taskItems" :key="item.id" :task="item" @change-modal="changeModalActive"
+                @change-status="changeStatusForModal" />
         </div>
-        <AppTaskModal v-if="isModalActive" @change-modal="changeModalActive" :status="taskStatusForModal"/>
+        <AppTaskModal v-if="isModalActive" @change-modal="changeModalActive" :status="taskStatusForModal" />
     </div>
 </template>
 

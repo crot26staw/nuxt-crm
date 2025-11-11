@@ -1,8 +1,14 @@
-
 import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  modules: ['@nuxtjs/supabase', 'shadcn-nuxt', '@vueuse/nuxt', '@vee-validate/nuxt', '@nuxt/image'],
+  modules: [
+    '@nuxtjs/supabase',
+    'shadcn-nuxt',
+    '@vueuse/nuxt',
+    '@vee-validate/nuxt',
+    '@nuxt/image',
+    '@pinia/nuxt',
+  ],
   supabase: {
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_SECRET_KEY,

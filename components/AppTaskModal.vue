@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import { useTaskStore } from '~/store/tasks';
+import type { TaskItem } from '~/shared/types/TaskItem';
+
+const taskStore = useTaskStore();
 
 const props = defineProps(['status']);
 
@@ -28,7 +32,7 @@ const isLoading = ref(false);
 const onSubmit = handleSubmit(async (values) => {
     isLoading.value = true
     try {
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('tasks')
             .insert({
                 task_name: values.name,
@@ -36,9 +40,12 @@ const onSubmit = handleSubmit(async (values) => {
                 price: values.price,
                 status: values.status
             })
-        if(error) {
+            .select()
+        if (error) {
             console.error('Unexpected error:', error);
+            return
         }
+        taskStore.addTaskItem(data[0]);
         emitChangeModal();
     } catch (err) {
         console.error('Unexpected error:', err);

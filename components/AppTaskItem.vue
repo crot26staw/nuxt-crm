@@ -1,32 +1,48 @@
 <script lang="ts" setup>
-import { useTask } from '~/composables/useTasks'
-const { tasks, loadTask } = useTask()
+import { useSupabaseClient } from "#imports";
+import { useTaskStore } from '~/store/tasks';
 
-const props = defineProps(['taskHead']);
-const emit = defineEmits(['change-modal','change-status']);
+const supabase = useSupabaseClient();
 
-const emitChangeModal = () =>{
-    emit('change-status', props.taskHead);
+const taskStore = useTaskStore();
+
+const props = defineProps(['task']);
+const emit = defineEmits(['change-modal', 'change-status']);
+
+const emitChangeModal = () => {
+    emit('change-status', props.task);
     emit('change-modal');
 }
 
-loadTask(props.taskHead.id)
+const deleteTaskItem = async (id: number, status: string) => {
+    const response = await supabase
+        .from('tasks')
+        .delete()
+        .eq('id', id)
+    if(response.error){
+        console.error(response.error)
+    } else {
+        taskStore.deleteTaskItem(status, id);
+    }
+}
 
 </script>
 <template>
-    <div :id="taskHead.id" class="AppTaskItem">
-        <p class="AppTaskItem__title">{{ taskHead.name }}</p>
+    <div :id="task.id" class="AppTaskItem">
+        <p class="AppTaskItem__title">{{ task.name }}</p>
         <button class="AppTaskItem__btn" @click="emitChangeModal">
             <NuxtImg src="icons/plus.svg" width="40px" />
         </button>
-        <div v-for="task in tasks" class="AppTaskItem__content">
-            <p class="AppTaskItem__name">{{ task.task_name }}</p>
-            <p class="AppTaskItem__price">{{ task.price }} руб.</p>
-            <p class="AppTaskItem__company">{{ task.company }}</p>
+        <div v-for="taskItem in task.items" draggable="true" class="AppTaskItem__content">
+            <NuxtImg src="icons/plus.svg" width="20px" height="20px" class="AppTaskItem__del" @click="deleteTaskItem(taskItem.id, task.id)" />
+            <p class="AppTaskItem__name">{{ taskItem.task_name }}</p>
+            <p class="AppTaskItem__price">{{ taskItem.price }} руб.</p>
+            <p class="AppTaskItem__company">{{ taskItem.company }}</p>
         </div>
     </div>
 </template>
 <style lang="scss">
+
 .AppTaskItem {
     &__title {
         text-align: center;
@@ -48,23 +64,40 @@ loadTask(props.taskHead.id)
         }
     }
 
-    &__content{
+    &__content {
         padding: 8px;
         border: 1px solid #0e182b;
+        background: white;
         border-radius: 8px;
-        margin-top: 20px;
+        margin-top: 24px;
         cursor: grab;
+        position: relative;
+        transition: all 0.3s;
+
+        &:hover{
+            background: rgba(14, 24, 43, 0.1);
+        }
     }
 
-    &__name{
+    &__del {
+        position: absolute;
+        transform: rotate(45deg);
+        right: -15px;
+        top: -20px;
+        cursor: pointer;
+    }
+
+    &__name {
         font-size: 24px;
         font-weight: 600;
     }
-    &__price{
+
+    &__price {
         margin-top: 4px;
         font-size: 18px;
     }
-    &__company{
+
+    &__company {
         font-size: 22px;
         font-weight: 600;
         margin-top: 8px;
