@@ -43,18 +43,20 @@ export const useTaskStore = defineStore('tasks', () => {
                 task.items = []
             })
             data.forEach(taskItem => {
-                const targetTask = tasks.value.find(task => task.id === taskItem.status)
-                if (targetTask) {
-                    targetTask.items.push(taskItem)
+                if (taskItem != 'archive') {
+                    const targetTask = tasks.value.find(task => task.id === taskItem.status)
+                    if (targetTask) {
+                        targetTask.items.push(taskItem)
+                    }
                 }
             })
         }
     }
 
-    const addTaskItem = (task: TaskItem) => {
-        tasks.value.find(taskItem => {
-            if (taskItem.id === task.status) {
-                taskItem.items.push(task)
+    const addTaskItem = (taskItem: TaskItem) => {
+        tasks.value.find(task => {
+            if (task.id === taskItem.status) {
+                task.items.push(taskItem)
             }
         })
     }
@@ -71,10 +73,29 @@ export const useTaskStore = defineStore('tasks', () => {
         })
     }
 
+    const updateTaskItem = (taskItem: TaskItem, status: string) => {
+        tasks.value.forEach(task => {
+            if (!Array.isArray(task.items)) return;
+
+            const idx = task.items.findIndex(item => item.id === taskItem.id);
+            if (idx !== -1) {
+                task.items.splice(idx, 1);
+            }
+        });
+        if (status != 'archive') {
+            tasks.value.find(task => {
+                if (task.id === status) {
+                    task.items.push(taskItem);
+                }
+            })
+        }
+    }
+
     return {
         tasks,
         getTaskItems,
         addTaskItem,
-        deleteTaskItem
+        deleteTaskItem,
+        updateTaskItem
     }
 })

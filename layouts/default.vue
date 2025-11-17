@@ -10,9 +10,11 @@
 <style lang="scss">
 .nuxt-wrapper {
   display: flex;
+  height: 100%;
 }
 .nuxt-content{
   padding: 60px 40px;
   width: 100%;
+  height: 100%;
 }
 </style>

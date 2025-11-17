@@ -34,6 +34,7 @@ const changeModalActive = () => {
 
 <style lang="scss">
 .AppHome {
+    height: 100%;
     &__wrapper {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -41,6 +42,7 @@ const changeModalActive = () => {
         grid-column-gap: 20px;
         grid-row-gap: 0px;
         margin-top: 22px;
+        height: 100%;
     }
 }
 </style>

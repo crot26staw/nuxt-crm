@@ -2,7 +2,6 @@
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { useTaskStore } from '~/store/tasks';
-import type { TaskItem } from '~/shared/types/TaskItem';
 
 const taskStore = useTaskStore();
 

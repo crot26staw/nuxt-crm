@@ -28,6 +28,22 @@ const logOut = async () => {
                         Главная
                     </NuxtLink>
                 </li>
+                <li class="AppHeader__li">
+                    <NuxtLink class="AppHeader__link" to="/projects">
+                        <div class="AppHeader__icon">
+                            <NuxtImg src="icons/projects.svg" width="24px" />
+                        </div>
+                        Проекты
+                    </NuxtLink>
+                </li>
+                <li class="AppHeader__li">
+                    <NuxtLink class="AppHeader__link" to="/account">
+                        <div class="AppHeader__icon">
+                            <NuxtImg src="icons/account.svg" width="24px" />
+                        </div>
+                        Аккаунт
+                    </NuxtLink>
+                </li>
             </ul>
         </nav>
     </div>
@@ -36,7 +52,7 @@ const logOut = async () => {
 .AppHeader {
     width: 300px;
     padding: 60px 20px;
-    height: 100vh;
+    height: 100%;
     position: relative;
     flex-shrink: 0;
     background: var(--primary);
@@ -77,8 +93,15 @@ const logOut = async () => {
     &__ul {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 16px;
         padding-left: 12px;
+    }
+
+    &__li{
+        transition: all 0.3s;
+        &:hover{
+            opacity: 0.7;
+        }
     }
 
     &__link {
@@ -93,21 +116,6 @@ const logOut = async () => {
         position: relative;
         width: fit-content;
         color: white;
-
-        &::after {
-            content: '';
-            height: 1px;
-            width: 0;
-            background: black;
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            transition: 0.3s;
-        }
-
-        &:hover::after {
-            width: 100%;
-        }
     }
 
 }
