@@ -42,7 +42,7 @@ const changeModalActive = () => {
         grid-column-gap: 20px;
         grid-row-gap: 0px;
         margin-top: 22px;
-        height: 100%;
+        min-height: 50%;
     }
 }
 </style>

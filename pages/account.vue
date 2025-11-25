@@ -1,83 +1,42 @@
 <script lang="ts" setup>
-import { useSupabaseClient, useSupabaseUser } from '#imports'
-import { ref } from 'vue'
+import { useForm } from 'vee-validate';
+import * as yup from 'yup';
+import { useDataUserStore } from '~/store/dataUser';
+const user = useSupabaseUser();
 
-const supabase = useSupabaseClient()
-const user = useSupabaseUser()
+// profeile avatar
+const { avatarUrl, loadProfile, uploadToSupabase } = useAvatarChange();
+await loadProfile();
 
 const fileInput = ref<HTMLInputElement | null>(null)
-const preview = ref('')
-const uploading = ref(false)
-
 const selectImage = () => {
-  fileInput.value?.click()
+  fileInput.value?.click();
 }
 
-// Получаем аватар
-const avatarUrl = ref('');
-const loadProfile = async () => {
-  if (!user.value?.sub) return
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('avatar_url')
-    .eq('id', user.value.sub)
-    .single()
-
-  if (error) {
-    console.error('Error loading profile:', error)
-    return
-  }
-  avatarUrl.value = data?.avatar_url || ''
-}
-loadProfile();
-
-// Загрузка аватара на сервер
 const onFileChange = async (e: Event) => {
   const input = e.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
-
-  preview.value = URL.createObjectURL(file)
-
   await uploadToSupabase(file)
 }
 
-const uploadToSupabase = async (file: File) => {
-  if (!user.value) return
+// data user update
+const { dataUser, isLoading,  getDataUser, updateDataUser, } = useDataUserStore();
+getDataUser();
 
-  uploading.value = true
+// Validate
+const { errors, handleSubmit, defineField } = useForm({
+  initialValues: {
+    name: dataUser.name
+  },
+  validationSchema: yup.object({}),
+});
 
-  try {
-    const fileName = `${user.value.sub}-${Date.now()}`
-    const filePath = `${user.value.sub}/${fileName}`
+const [name, nameAttrs] = defineField('name');
 
-    const { error: uploadError } = await supabase.storage
-      .from('avatars')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: true
-      })
-
-    if (uploadError) throw uploadError
-
-    const { data } = supabase.storage
-      .from('avatars')
-      .getPublicUrl(filePath)
-
-    const publicUrl = data.publicUrl
-
-    await supabase
-      .from('profiles')
-      .update({ avatar_url: publicUrl })
-      .eq('id', user.value.sub)
-    loadProfile();
-  } catch (error) {
-    console.error('Upload error:', error)
-  } finally {
-    uploading.value = false
-  }
-}
+const onSubmit = handleSubmit(async (values) => {
+  await updateDataUser(values.name);
+});
 
 </script>
 
@@ -91,12 +50,23 @@ const uploadToSupabase = async (file: File) => {
             <NuxtImg src="icons/photo.svg" width="24px" class="AppAccount__icon" />
           </div>
           <div class="AppAccount__photo">
-            <NuxtImg v-if="avatarUrl != ''" :src="avatarUrl" width="80px" class="AppAccount__avatar-img" />
+            <NuxtImg v-if="avatarUrl != ''" :src="avatarUrl" width="100px" height="100px"
+              class="AppAccount__avatar-img" />
             <NuxtImg v-else src="icons/photo.svg" width="24px" class="AppAccount__icon" />
           </div>
           <input type="file" accept="image/*" ref="fileInput" class="hidden" @change="onFileChange" />
         </div>
-        <p class="AppAccount__name">User</p>
+        <form class="AppAccount__form" @submit.prevent="onSubmit">
+          <div class="AppAccount__form-item">
+            <p class="AppAccount__form-item-name">Отображаемое имя</p>
+            <UiInput type="name" class="AppAccount__input" placeholder="Имя" v-model="name" v-bind="nameAttrs" />
+            <p v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name }}</p>
+          </div>
+          <UiButton as="button" type="submit" :disabled="isLoading" class="btn login-page__btn">
+            <span v-if="!isLoading">Сохранить</span>
+            <span v-else>⏳ Сохранение...</span>
+          </UiButton>
+        </form>
       </div>
     </div>
   </div>
@@ -123,7 +93,7 @@ const uploadToSupabase = async (file: File) => {
     border-radius: 50%;
     overflow: hidden;
 
-    &:hover .AppAccount__avatar-label{
+    &:hover .AppAccount__avatar-label {
       opacity: 1;
     }
   }
@@ -144,15 +114,10 @@ const uploadToSupabase = async (file: File) => {
   }
 
   &__photo {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background: rgba(14, 24, 43, 0.6);
     position: relative;
-  }
-
-  &__name {
-    font-size: 24px;
-    font-weight: 600;
   }
 
   &__icon {
@@ -160,6 +125,20 @@ const uploadToSupabase = async (file: File) => {
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+  }
+
+  &__form {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  &__input {
+    min-width: 220px;
+  }
+
+  &__form-item-name {
+    color: rgba(14, 24, 43, 0.6);
   }
 }
 </style>

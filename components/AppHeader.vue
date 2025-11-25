@@ -1,17 +1,22 @@
 <script lang="ts" setup>
 const supabase = useSupabaseClient();
 const router = useRouter();
+import { useDataUserStore } from '~/store/dataUser';
 const logOut = async () => {
     await supabase.auth.signOut();
     await router.push('/signup');
 }
+const user = useSupabaseUser();
+const { dataUser, isLoading, getDataUser, updateDataUser, } = useDataUserStore();
+getDataUser();
 
 </script>
 <template>
     <div class="AppHeader">
         <div class="AppHeader__head">
             <NuxtLink to="/">
-                <NuxtImg src="icons/logo.svg" width="120px" />
+                <NuxtImg v-if="dataUser.name == ''" src="icons/logo.svg" width="120px" />
+                <p class="AppHeader__link" v-else>{{ dataUser.name }}</p>
             </NuxtLink>
             <div class="AppHeader__logout" @click="logOut">
                 <p>Выход</p>
@@ -68,7 +73,7 @@ const logOut = async () => {
 
     &__head {
         display: flex;
-        align-items: flex-end;
+        // align-items: flex-end;
         justify-content: space-between;
     }
 

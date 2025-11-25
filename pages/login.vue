@@ -2,7 +2,7 @@
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 definePageMeta({
-    layout:'auth'
+    layout: 'auth'
 })
 
 const { errors, handleSubmit, defineField, resetForm } = useForm({
@@ -13,6 +13,8 @@ const { errors, handleSubmit, defineField, resetForm } = useForm({
                 'Минимум 8 символов, включая заглавную букву, строчную букву, цифру и спецсимвол'
             )
             .required('Пароль обязательно для заполнения'),
+        name: yup.string()
+            .required('Имя обязательно для заполнения'),
         email: yup.string()
             .email('Введите корректный email адрес')
             .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Email должен содержать @ и домен')
@@ -29,6 +31,11 @@ const onSubmit = handleSubmit(async (values) => {
         const { data, error } = await supabase.auth.signUp({
             email: values.email,
             password: values.password,
+            options: {
+                data: {
+                    display_name: values.name
+                }
+            }
         })
         if (error) {
             console.error('Auth error:', error.message)
@@ -36,6 +43,7 @@ const onSubmit = handleSubmit(async (values) => {
             return
         }
         await router.push('/')
+        console.log(data.user?.id);
     } catch (err) {
         console.error('Unexpected error:', err);
     } finally {
@@ -45,6 +53,7 @@ const onSubmit = handleSubmit(async (values) => {
 });
 const [email, emailAttrs] = defineField('email');
 const [password, passwordAttrs] = defineField('password');
+const [name, nameAttrs] = defineField('name');
 </script>
 <template>
     <div class="login-page">
@@ -53,6 +62,10 @@ const [password, passwordAttrs] = defineField('password');
             <div>
                 <UiInput type="email" placeholder="Email" v-model="email" v-bind="emailAttrs" />
                 <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
+            </div>
+            <div class="AppAccount__form-item">
+                <UiInput type="text" placeholder="Имя" v-model="name" v-bind="nameAttrs" />
+                <p v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name }}</p>
             </div>
             <div>
                 <UiInput type="password" placeholder="Пароль" v-model="password" v-bind="passwordAttrs" />

@@ -8,7 +8,6 @@ const supabase = useSupabaseClient();
 
 const taskStore = useTaskStore();
 
-
 const props = defineProps(['task']);
 const emit = defineEmits(['change-modal', 'change-status']);
 
