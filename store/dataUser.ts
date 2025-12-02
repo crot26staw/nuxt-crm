@@ -27,7 +27,6 @@ export const useDataUserStore = defineStore('dataUser', () => {
             console.error('Error loading profile:', error)
             return
         }
-
         dataUser.value.name = data?.username;
     }
 
@@ -53,10 +52,25 @@ export const useDataUserStore = defineStore('dataUser', () => {
         }
     };
 
+    const resetStore = () =>{
+        dataUser.value.name = '';
+    }
+
+    watch(
+        () => user.value,
+        (newUser) => {
+            if (newUser?.sub) {
+                getDataUser();
+            }
+        },
+        { immediate: true }
+    );
+
     return {
         dataUser,
         isLoading,
         getDataUser,
         updateDataUser,
+        resetStore
     }
 });

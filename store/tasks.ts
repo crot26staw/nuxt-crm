@@ -29,8 +29,14 @@ export const useTaskStore = defineStore('tasks', () => {
             name: "В продакшн",
             items: []
         },
+        {
+            id: "archive",
+            name: "Архив",
+            items: []
+        },
     ]);
     const supabase = useSupabaseClient();
+    const user = useSupabaseUser();
 
     const getTaskItems = async () => {
         const { data, error } = await supabase
@@ -43,14 +49,20 @@ export const useTaskStore = defineStore('tasks', () => {
                 task.items = []
             })
             data.forEach(taskItem => {
-                if (taskItem != 'archive') {
-                    const targetTask = tasks.value.find(task => task.id === taskItem.status)
-                    if (targetTask) {
-                        targetTask.items.push(taskItem)
-                    }
+                const targetTask = tasks.value.find(task => task.id === taskItem.status)
+                if (targetTask) {
+                    targetTask.items.push(taskItem)
                 }
             })
         }
+    }
+
+    const getNoArchiveTasks = () => {
+        return tasks.value.filter(task => task.id != 'archive');
+    }
+
+    const getArchiveTasks = () => {
+        return tasks.value.find(task => task.id === 'archive');
     }
 
     const addTaskItem = (taskItem: TaskItem) => {
@@ -91,9 +103,21 @@ export const useTaskStore = defineStore('tasks', () => {
         }
     }
 
+    watch(
+        () => user.value,
+        (newUser) => {
+            if (newUser?.sub) {
+                getTaskItems();
+            }
+        },
+        { immediate: true }
+    );
+
     return {
         tasks,
         getTaskItems,
+        getNoArchiveTasks,
+        getArchiveTasks,
         addTaskItem,
         deleteTaskItem,
         updateTaskItem

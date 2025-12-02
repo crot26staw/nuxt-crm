@@ -2,73 +2,100 @@
 const supabase = useSupabaseClient();
 const router = useRouter();
 import { useDataUserStore } from '~/store/dataUser';
+
+const { resetStore } = useDataUserStore();
 const logOut = async () => {
+    resetStore();
     await supabase.auth.signOut();
     await router.push('/signup');
 }
-const user = useSupabaseUser();
-const { dataUser, isLoading, getDataUser, updateDataUser, } = useDataUserStore();
-getDataUser();
+
+const { dataUser } = storeToRefs(useDataUserStore());
 
 </script>
 <template>
     <div class="AppHeader">
-        <div class="AppHeader__head">
-            <NuxtLink to="/">
-                <NuxtImg v-if="dataUser.name == ''" src="icons/logo.svg" width="120px" />
-                <p class="AppHeader__link" v-else>{{ dataUser.name }}</p>
-            </NuxtLink>
-            <div class="AppHeader__logout" @click="logOut">
-                <p>Выход</p>
-                <NuxtImg src="icons/logout.svg" class="AppHeader__icon" width="32px" />
-            </div>
+        <div class="AppHeader__arrow">
+            <NuxtImg src="icons/arrow.svg" width="32px"/>
         </div>
-        <nav class="AppHeader__nav">
-            <ul class="AppHeader__ul">
-                <li class="AppHeader__li">
-                    <NuxtLink class="AppHeader__link" to="/">
-                        <div class="AppHeader__icon">
-                            <NuxtImg src="icons/home.svg" width="24px" />
-                        </div>
-                        Главная
-                    </NuxtLink>
-                </li>
-                <li class="AppHeader__li">
-                    <NuxtLink class="AppHeader__link" to="/projects">
-                        <div class="AppHeader__icon">
-                            <NuxtImg src="icons/projects.svg" width="24px" />
-                        </div>
-                        Проекты
-                    </NuxtLink>
-                </li>
-                <li class="AppHeader__li">
-                    <NuxtLink class="AppHeader__link" to="/account">
-                        <div class="AppHeader__icon">
-                            <NuxtImg src="icons/account.svg" width="24px" />
-                        </div>
-                        Аккаунт
-                    </NuxtLink>
-                </li>
-            </ul>
-        </nav>
+        <div class="AppHeader__container">
+            <div class="AppHeader__head">
+                <NuxtLink to="/">
+                    <NuxtImg v-if="dataUser.name == ''" src="icons/logo.svg" width="120px" />
+                    <p class="AppHeader__link" v-else>{{ dataUser.name }}</p>
+                </NuxtLink>
+                <div class="AppHeader__logout" @click="logOut">
+                    <p>Выход</p>
+                    <NuxtImg src="icons/logout.svg" class="AppHeader__icon" width="32px" />
+                </div>
+            </div>
+            <nav class="AppHeader__nav">
+                <ul class="AppHeader__ul">
+                    <li class="AppHeader__li">
+                        <NuxtLink class="AppHeader__link" to="/">
+                            <div class="AppHeader__icon">
+                                <NuxtImg src="icons/home.svg" width="24px" />
+                            </div>
+                            Главная
+                        </NuxtLink>
+                    </li>
+                    <li class="AppHeader__li">
+                        <NuxtLink class="AppHeader__link" to="/projects">
+                            <div class="AppHeader__icon">
+                                <NuxtImg src="icons/projects.svg" width="24px" />
+                            </div>
+                            Проекты
+                        </NuxtLink>
+                    </li>
+                    <li class="AppHeader__li">
+                        <NuxtLink class="AppHeader__link" to="/account">
+                            <div class="AppHeader__icon">
+                                <NuxtImg src="icons/account.svg" width="24px" />
+                            </div>
+                            Аккаунт
+                        </NuxtLink>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </template>
 <style lang="scss">
 .AppHeader {
-    width: 300px;
+    width: 60px;
     padding: 60px 20px;
     height: 100%;
     position: relative;
     flex-shrink: 0;
     background: var(--primary);
+    overflow: hidden;
+    transition: all 0.3s;
 
-    &::before {
-        content: '';
+    &__arrow{
         position: absolute;
-        top: 0;
-        right: 0;
-        width: 1px;
-        height: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        transition: all 0.3s;
+        opacity: 1;
+    }
+
+    &:hover{
+        width: 300px;
+        
+        .AppHeader__container{
+            opacity: 1;
+        }
+
+        .AppHeader__arrow{
+            opacity: 0;
+        }
+    }
+
+    &__container{
+        width: 260px;
+        transition: all 0.3s;
+        opacity: 0;
     }
 
     &__head {
@@ -102,9 +129,10 @@ getDataUser();
         padding-left: 12px;
     }
 
-    &__li{
+    &__li {
         transition: all 0.3s;
-        &:hover{
+
+        &:hover {
             opacity: 0.7;
         }
     }

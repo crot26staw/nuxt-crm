@@ -5,6 +5,7 @@ export const useAvatarChange = () => {
 
   // Получаем аватар
   const avatarUrl = ref('');
+  
   const loadProfile = async () => {
     if (!user.value?.sub) return
 
@@ -22,7 +23,6 @@ export const useAvatarChange = () => {
   }
 
   // Загрузка аватара на сервер
-
   const uploadToSupabase = async (file: File) => {
     if (!user.value) return
 

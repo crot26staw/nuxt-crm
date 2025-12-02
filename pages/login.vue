@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+
 definePageMeta({
     layout: 'auth'
 })
@@ -43,7 +44,6 @@ const onSubmit = handleSubmit(async (values) => {
             return
         }
         await router.push('/')
-        console.log(data.user?.id);
     } catch (err) {
         console.error('Unexpected error:', err);
     } finally {

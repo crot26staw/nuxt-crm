@@ -2,7 +2,6 @@
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { useDataUserStore } from '~/store/dataUser';
-const user = useSupabaseUser();
 
 // profeile avatar
 const { avatarUrl, loadProfile, uploadToSupabase } = useAvatarChange();
@@ -21,13 +20,13 @@ const onFileChange = async (e: Event) => {
 }
 
 // data user update
-const { dataUser, isLoading,  getDataUser, updateDataUser, } = useDataUserStore();
-getDataUser();
+const { updateDataUser } = useDataUserStore();
+const {dataUser, isLoading } = storeToRefs(useDataUserStore());
 
 // Validate
 const { errors, handleSubmit, defineField } = useForm({
   initialValues: {
-    name: dataUser.name
+    name: dataUser.value.name
   },
   validationSchema: yup.object({}),
 });

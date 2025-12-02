@@ -2,6 +2,7 @@
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { useTaskStore } from '~/store/tasks';
+const user = useSupabaseUser();
 
 const taskStore = useTaskStore();
 
@@ -37,7 +38,9 @@ const onSubmit = handleSubmit(async (values) => {
                 task_name: values.name,
                 company: values.company,
                 price: values.price,
-                status: values.status
+                status: values.status,
+                manager_id: user.value?.sub,
+                manager_name: user.value?.user_metadata.display_name
             })
             .select()
         if (error) {

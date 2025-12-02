@@ -3,9 +3,8 @@ import { useTaskStore } from '~/store/tasks';
 import type { Task } from '~/shared/types/TaskItem';
 
 const taskStore = useTaskStore();
-taskStore.getTaskItems();
+const taskItems = ref<Task[]>(taskStore.getNoArchiveTasks());
 
-const taskItems = ref<Task[]>(taskStore.tasks);
 
 const taskStatusForModal = ref({
     id: "inbox",

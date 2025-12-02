@@ -4,7 +4,8 @@ export interface TaskItem {
     task_name: string,
     company: string,
     price: number,
-    status: string
+    status: string,
+    manager_name: string
 }
 
 export interface Task {

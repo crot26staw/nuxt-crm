@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+
 definePageMeta({
     layout:'auth'
 })
