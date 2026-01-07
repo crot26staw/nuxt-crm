@@ -52,13 +52,16 @@ loadManagerName()
 
 </script>
 <template>
-    <div draggable="true" @dragstart="emits('onDragStart', $event, taskItem)" class="AppTaskItem__content">
-        <NuxtImg src="icons/plus.svg" width="20px" height="20px" class="AppTaskItem__del"
-            @click="deleteItem(taskItem.id, taskId)" />
-        <p class="AppTaskItem__name">{{ taskItem.task_name }}</p>
-        <p class="AppTaskItem__price">{{ taskItem.price }} руб.</p>
-        <p class="AppTaskItem__company">{{ taskItem.company }}</p>
-        <p class="AppTaskItem__price">Исполнитель: {{ managerName }}</p>
-        <p v-if="taskId === 'for-shipment'" class="AppTaskItem__archive" @click="moveToArchive(taskItem)">В архив</p>
-    </div>
+    <NuxtLink :to="{ name: 'projects-id', params: { id: taskItem.id } }">
+        <div draggable="true" @dragstart="emits('onDragStart', $event, taskItem)" class="AppTaskItem__content">
+            <NuxtImg src="icons/plus.svg" width="20px" height="20px" class="AppTaskItem__del"
+                @click="deleteItem(taskItem.id, taskId)" />
+            <p class="AppTaskItem__name">{{ taskItem.task_name }}</p>
+            <p class="AppTaskItem__price">{{ taskItem.price }} руб.</p>
+            <p class="AppTaskItem__company">{{ taskItem.company }}</p>
+            <p class="AppTaskItem__price">Исполнитель: {{ managerName }}</p>
+            <p v-if="taskId === 'for-shipment'" class="AppTaskItem__archive" @click="moveToArchive(taskItem)">В архив
+            </p>
+        </div>
+    </NuxtLink>
 </template>

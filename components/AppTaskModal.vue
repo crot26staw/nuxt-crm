@@ -26,7 +26,7 @@ const { errors, handleSubmit, defineField, resetForm } = useForm({
 });
 
 const supabase = useSupabaseClient();
-let isError = ref<string>('');
+let isError = ref<string | null>(null);
 const isLoading = ref(false);
 
 const onSubmit = handleSubmit(async (values) => {
