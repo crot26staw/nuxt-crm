@@ -14,6 +14,12 @@ export default defineNuxtConfig({
     key: process.env.SUPABASE_SECRET_KEY,
     redirect: false,
   },
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_SECRET_KEY
+    }
+  },
   shadcn: {
     prefix: 'Ui',
     componentDir: './components/ui'

@@ -1,4 +1,4 @@
-export const deleteTaskItem = async (id: number) => {
+export const useDeleteTaskItem = async (id: number) => {
   const supabase = useSupabaseClient();
   return await supabase
     .from('tasks')

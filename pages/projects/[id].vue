@@ -31,11 +31,12 @@ await getTask();
             <h1 class="AppTask__title title">{{ task?.task_name }}</h1>
             <p class="AppTask__subtitle">{{ task?.company }}</p>
         </div>
-        
+        <AppTaskChat/>
     </div>
 </template>
 <style lang="scss">
     .AppTask{
+        height: 100%;
         &__titles{
             display: flex;
             align-items: center;

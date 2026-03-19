@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { deleteTaskItem } from "#imports";
+
 import { useTaskStore } from '~/store/tasks';
 import type { TaskItem } from "~/shared/types/TaskItem";
 
@@ -10,7 +10,7 @@ const supabase = useSupabaseClient();
 
 const taskStore = useTaskStore();
 const deleteItem = async (id: number, status: string) => {
-    const { error } = await deleteTaskItem(id);
+    const { error } = await useDeleteTaskItem(id);
 
     if (error) {
         console.error(error);
@@ -32,7 +32,6 @@ const moveToArchive = async (taskItem: TaskItem) => {
     }
 }
 
-// manager name
 const managerName = ref('');
 
 const loadManagerName = async () => {
